@@ -21,3 +21,5 @@ services:
       - db
     volumes:
       - ..:/myapp
+    stdin_open: true
+    tty: true
