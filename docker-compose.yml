@@ -8,24 +8,31 @@ services:
     volumes:
       - ../tmp/db:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
 
   redis:
     image: redis:6.0.6-alpine3.12
     command: redis-server
-    ports:
-      - "6379:6379"
     volumes:
       - ../redis:/data
+    ports:
+      - 6379:6379
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.0
+    environment:
+      - cluster.initial_master_nodes=elasticsearch
+      - cluster.name=es-docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
       - ../elasticsearch:/usr/share/elasticsearch/data
-    environment:
-      - discovery.type=single-node
     ports:
-      - "9200:9200"
+      - 9200:9200
 
   web:
     build:
@@ -34,7 +41,7 @@ services:
     container_name: sportnacja_app
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     ports:
-      - "3000:3000"
+      - 3000:3000
     depends_on:
       - db
       - redis
