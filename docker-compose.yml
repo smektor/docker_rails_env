@@ -1,40 +1,37 @@
 version: "3"
 services:
-  db:
-    image: postgres:12.3-alpine
-    environment:
-      - POSTGRES_DB=db
-      - POSTGRES_HOST_AUTH_METHOD=trust
-    volumes:
-      - ../tmp/db:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-
   redis:
     image: redis:6.0.6-alpine3.12
+    container_name: redis
     command: redis-server
     volumes:
-      - ../redis:/data
+      - redis:/data
     ports:
       - 6379:6379
 
+  db:
+    image: postgres:12.3-alpine
+    container_name: db
+    environment:
+      POSTGRES_DB: "${DB_NAME}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.0
+    container_name: elasticsearch
     environment:
-      - cluster.initial_master_nodes=elasticsearch
-      - cluster.name=es-docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+      - discovery.type=single-node
     volumes:
-      - ../elasticsearch:/usr/share/elasticsearch/data
+      - elasticsearch:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
 
-  web:
+  app:
     build:
       context: ../
       dockerfile: docker_rails_env/Dockerfile
@@ -47,7 +44,7 @@ services:
       - redis
       - elasticsearch
     volumes:
-      - ..:/myapp
+      - ..:/sportnacja
     environment:
       - ELASTICSEARCH_URL=elasticsearch
       - REDIS_URL_CACHING=redis://redis:6379/1
@@ -56,6 +53,6 @@ services:
     tty: true
 
 volumes:
-  elasticsearch:
   redis:
   postgres:
+  elasticsearch:

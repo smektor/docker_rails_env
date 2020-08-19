@@ -7,15 +7,16 @@ RUN apk add --no-cache --update bash \
     yarn \
     tzdata \
     imagemagick \
-    less
+    less \
+    vim
 
-RUN mkdir /myapp
-WORKDIR /myapp
-COPY Gemfile /myapp/Gemfile
-COPY Gemfile.lock /myapp/Gemfile.lock
+RUN mkdir /sportnacja
+WORKDIR /sportnacja
+COPY Gemfile /sportnacja/Gemfile
+COPY Gemfile.lock /sportnacja/Gemfile.lock
 RUN bundle install
 
-COPY . /myapp
+COPY . /sportnacja
 
 # Add a script to be executed every time the container starts.
 COPY ./docker_rails_env/entrypoint.sh /usr/bin/
