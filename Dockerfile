@@ -18,5 +18,8 @@ RUN bundle install
 
 COPY . /sportnacja
 COPY ./docker_rails_env/entrypoint.sh /usr/bin/
+
+RUN yarn install --check-files
+
 RUN chmod +x /usr/bin/entrypoint.sh
 EXPOSE 3000
