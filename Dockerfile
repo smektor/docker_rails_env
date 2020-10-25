@@ -18,7 +18,7 @@ RUN mkdir /sportnacja
 WORKDIR /sportnacja
 COPY Gemfile /sportnacja/Gemfile
 COPY Gemfile.lock /sportnacja/Gemfile.lock
-RUN bundle install
+RUN bundle install --without development test
 
 COPY . /sportnacja
 COPY ./docker_rails_env/entrypoint.sh /usr/bin/
