@@ -24,7 +24,6 @@ COPY . /sportnacja
 COPY ./docker_rails_env/entrypoint.sh /usr/bin/
 
 RUN yarn install --check-files
-RUN rails assets:precompile
 
 RUN chmod +x /usr/bin/entrypoint.sh
 EXPOSE 3000
