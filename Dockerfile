@@ -1,4 +1,4 @@
-FROM ruby:2.7.1-alpine3.12
+FROM ruby:3.0.0-alpine3.13
 RUN apk add --no-cache --update bash \
     build-base \
     nodejs \
@@ -8,7 +8,8 @@ RUN apk add --no-cache --update bash \
     tzdata \
     imagemagick \
     less \
-    vim
+    vim \
+    git
 
 RUN mkdir /sportnacja
 WORKDIR /sportnacja
