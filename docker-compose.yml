@@ -30,6 +30,8 @@ services:
       - app
     networks:
       - frontend
+    logging:
+      driver: none
 
   sidekiq:
     build:
